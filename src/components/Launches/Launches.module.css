@@ -1,0 +1,31 @@
+.Launches {
+}
+.clearFilters {
+  padding-left: 10px;
+  color: blue;
+  cursor: pointer;
+}
+.actions {
+  padding-left: "35px";
+}
+.filters {
+  padding: 10px 10px 10px 10px;
+}
+.inputs {
+  padding-left: 10px;
+  margin: 10px 10px 10px 10px;
+  height: 20px;
+}
+table {
+  padding-top: 10px;
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
