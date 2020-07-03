@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Moment from 'react-moment';
-
+import './History.module.css'
 import WikiIcon from '../../assets/images/wiki.jpeg';
 import RedditIcon from '../../assets/images/reddit.png';
 import ArticleIcon from '../../assets/images/article.png';
@@ -25,33 +25,33 @@ function History() {
           <td>Title</td>
           <td>Details</td>
           <td>Event Date</td>
-          <td style={{paddingLeft: '35px'}}>Actions</td>
+          <td className="actions">Actions</td>
         </tr>
       </thead>
       <tbody>
         {data.map(({ title, details, event_date_utc, links }, index) => (
-          <tr key={index} id="row0">
-            <td id="cell0-0">
+          <tr key={index} >
+            <td >
               {title}
             </td>
-            <td id="cell0-1" style={{ width: '1000px', paddingRight: '25px' }}>
+            <td className="history-details">
               {details}
             </td>
-            <td id="cell0-2">
+            <td >
               <Moment format="DD / MM / YYYY HH:mm">
                 {event_date_utc}
               </Moment>
             </td>
-            <td style={{ paddingLeft: '25px' }}>
+            <td>
               <div className="links">
                 <a href={links.wikipedia} target={"_blank"}>
-                  <img style={{ width: '40px', paddingTop: '10px', paddingLeft: '10px' }} src={WikiIcon} />
+                  <img className="image" src={WikiIcon} />
                 </a>
                 <a href={links.reddit} target={"_blank"}>
-                  <img style={{ width: '40px', paddingTop: '10px', paddingLeft: '10px' }} src={RedditIcon} />
+                  <img className="image" src={RedditIcon} />
                 </a>
                 <a href={links.article} target={"_blank"}>
-                  <img style={{ width: '40px', paddingTop: '10px', paddingLeft: '10px' }} src={ArticleIcon} />
+                  <img className="image" src={ArticleIcon} />
                 </a>
               </div>
             </td>

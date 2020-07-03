@@ -1,1 +1,18 @@
-.History {}
+.History {
+}
+
+.image {
+  width: 40px;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+.actions {
+  padding-left: 35px;
+}
+.history-details {
+  width: 1000px;
+  padding-right: 25px;
+}
+td {
+  padding-left: 25px;
+}

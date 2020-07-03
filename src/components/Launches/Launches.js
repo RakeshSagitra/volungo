@@ -17,7 +17,7 @@ function Launches() {
         'https://api.spacexdata.com/v3/launches');
       setData(result.data);
       let results = result.data.filter(event =>
-        event.mission_name.toLowerCase().includes(search)
+        event.mission_name.toLowerCase().includes(search.toLowerCase())
       );
       setData(results);
       console.log(searchDate)
@@ -75,10 +75,10 @@ function Launches() {
         <tbody>
           {data.map(({ mission_name, details, launch_date_local, links }, index) => (
             < tr key={index} id="row0" >
-              <td id="cell0-0" style={{ paddingLeft: '5px', paddingRight: '10px', width: '100px' }}>
+              <td className="missionName" id="cell0-0">
                 {mission_name}
               </td>
-              <td id="cell0-1" style={{ width: '1200px', paddingRight: '25px' }}>
+              <td id="cell0-1" className="details">
                 {details}
               </td>
               <td id="cell0-2">
@@ -86,25 +86,25 @@ function Launches() {
                   {launch_date_local}
                 </Moment>
               </td>
-              <td style={{ paddingLeft: '25px' }}>
+              <td>
                 <div className="links">
                   <a href={links.wikipedia} target={"_blank"}>
                     <img
-                      style={{ width: '40px', paddingTop: '10px', paddingLeft: '10px' }}
+                      className="image"
                       src={WikiIcon}
                     />
                   </a>
                   <a href={links.reddit} target={"_blank"}>
                     <img
-                      style={{ width: '40px', paddingTop: '10px', paddingLeft: '10px' }}
+                      className="image"
                       src={RedditIcon}
                     />
                   </a>
                   <a href={links.article_link} target={"_blank"}>
-                    <img style={{ width: '40px', paddingTop: '10px', paddingLeft: '10px' }} src={ArticleIcon} />
+                    <img className="image" src={ArticleIcon} />
                   </a>
                   <a href={links.video_link} target={"_blank"}>
-                    <img style={{ width: '40px', paddingTop: '10px', paddingLeft: '10px' }} src={YoutubeIcon} />
+                    <img className="image" src={YoutubeIcon} />
                   </a>
                 </div>
               </td>
