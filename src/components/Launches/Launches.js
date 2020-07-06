@@ -68,18 +68,24 @@ function Launches() {
           <tr>
             <td>Title</td>
             <td>Details</td>
+            <td>Payload Details</td>
             <td>Event Date</td>
             <td className="actions">Actions</td>
           </tr>
         </thead>
         <tbody>
-          {data.map(({ mission_name, details, launch_date_local, links }, index) => (
+          {data.map(({ mission_name, details, launch_date_local, links, rocket }, index) => (
             < tr key={index} id="row0" >
               <td className="missionName" id="cell0-0">
                 {mission_name}
               </td>
               <td id="cell0-1" className="details">
                 {details}
+              </td>
+              <td id="cell0-1" className="payload">
+                <p><b>Nationality:</b> {rocket.second_stage.payloads[0].nationality}</p>
+                <p><b>Manufacturer:</b> {rocket.second_stage.payloads[0].manufacturer}</p>
+                <p><b>Payload Type:</b> {rocket.second_stage.payloads[0].payload_type}</p>
               </td>
               <td id="cell0-2">
                 <Moment format="DD / MM / YYYY HH:mm">

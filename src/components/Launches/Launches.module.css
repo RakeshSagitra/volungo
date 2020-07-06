@@ -16,7 +16,11 @@
   padding-left: 10px;
 }
 .details {
-  width: 1200px;
+  width: 1000px;
+  padding-right: 25px;
+}
+.payload {
+  width: 200px;
   padding-right: 25px;
 }
 .actions {
