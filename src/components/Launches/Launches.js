@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Moment from 'react-moment';
+import Select from 'react-select';
 import './Launches.module.css'
 import WikiIcon from '../../assets/images/wiki.jpeg';
 import RedditIcon from '../../assets/images/reddit.png';
@@ -9,29 +10,75 @@ import YoutubeIcon from '../../assets/images/youtube.png';
 
 function Launches() {
   const [data, setData] = useState([]);
+  const [rockets, setRockets] = useState([]);
   const [search, setSearch] = useState('');
   const [searchDate, setSearchDate] = useState('');
+  const [selectOrbit, setSelectOrbit] = useState('');
+  const [orbitMap, setOrbitMap] = useState(new Map());
+  const [launches, setLaunches] = useState([]);
+  const orbits = [
+    {
+      "id": '',
+      "name": "Select Orbit"
+    }, {
+      "id": "leo",
+      "name": "Low Earth Orbit"
+    },
+    {
+      "id": "mars",
+      "name": "Mars Orbit"
+    },
+    {
+      "id": "moon",
+      "name": "Moon Orbit"
+    }, {
+      "id": "gto",
+      "name": "Geosynchronous Transfer Orbit"
+    },
+    {
+      "id": "pluto",
+      "name": "Pluto Orbit"
+    }
+  ]
+  // Replace your useEffect with these. Please handle errors as well.
   useEffect(() => {
     async function fetchData() {
-      const result = await axios(
-        'https://api.spacexdata.com/v3/launches');
-      setData(result.data);
-      let results = result.data.filter(event =>
-        event.mission_name.toLowerCase().includes(search.toLowerCase())
-      );
-      setData(results);
-      console.log(searchDate)
-      console.log(search)
-      console.log(results)
-      console.log(result.data[0].launch_date_local)
-      results = results.filter(event =>
-        event.launch_date_local.includes(searchDate)
-      );
-      setData(results);
-      console.log(results)
+      // TODO: Need error handling here!!!
+      const { data } = await axios('https://api.spacexdata.com/v3/launches');
+      setLaunches(data);
+      setData(data);
+      const rockets = await axios('https://api.spacexdata.com/v3/rockets');
+      setRockets(rockets.data);
+      setOrbitMap(createRocketOrbitMap(rockets.data));
     }
-    fetchData();
-  }, [search, searchDate]);
+    fetchData()
+  }, []);
+
+  useEffect(() => {
+    const filteredData = launches.filter(({ mission_name, launch_date_local, rocket }) => {
+      let match = true;
+      if (search && !mission_name.toLowerCase().includes(search.toLowerCase())) {
+        return false;
+      }
+      if (searchDate && !launch_date_local.includes(searchDate)) {
+        return false;
+      }
+      if (selectOrbit) {
+        let returnResults = []
+        let orbitMapValues = orbitMap.get(rocket.rocket_id)
+        let selectedOrbitValue = orbitMapValues.get(selectOrbit)
+        if (selectedOrbitValue) {
+          if(selectedOrbitValue.lb < rocket.second_stage.payloads[0].payload_mass_lbs) {
+            return false
+          }
+        }
+      }
+
+      return true;
+    });
+    console.log(filteredData)
+    setData(filteredData);
+  }, [search, searchDate, selectOrbit]);
 
   function searchData(value) {
     setSearch(value)
@@ -40,9 +87,29 @@ function Launches() {
   function searchDateFunction(value) {
     setSearchDate(value)
   }
+
+  function createRocketOrbitMap(rockets) {
+    let returnResults = new Map()
+    rockets.map(result => {
+      let weights = new Map()
+      result.payload_weights.map(weight => {
+        weights.set(weight.id, weight)
+      })
+      returnResults.set(result.rocket_id, weights)
+    })
+    console.log(returnResults)
+    return returnResults
+  }
+
+  function setSelectOrbitValue(value) {
+    console.log(value)
+    setSelectOrbit(value)
+  }
+
   function clearFilters(event) {
     setSearch('')
     setSearchDate('')
+    setSelectOrbit('')
   }
 
   return (
@@ -61,6 +128,12 @@ function Launches() {
           onChange={(event) => { searchDateFunction(event.target.value) }}
           modifier='material'
           placeholder='Search Event' />
+        <select onChange={(event) => { setSelectOrbitValue(event.target.value) }} className="select" id="dropdown">
+          {orbits.map((orbit, index) => (
+            <option key={index} value={orbit.id}>{orbit.name}</option>
+          ))}
+
+        </select>
         <a className='clearFilters' onClick={(event) => { clearFilters(event) }}>clear</a>
       </div>
       <table id="simple-board">

@@ -29,6 +29,9 @@
 .filters {
   padding: 10px 10px 10px 10px;
 }
+.select {
+  height: 25px;
+}
 .inputs {
   padding-left: 10px;
   margin: 10px 10px 10px 10px;
