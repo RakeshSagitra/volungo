@@ -1,12 +1,11 @@
 const rockets = (state = {}, action) => {
   switch (action.type) {
     case 'GET_ROCKETS':
-      return { ...state, loading: true };
+      return { ...state, loading: true }
     case 'ROCKETS_RECEIVED':
-      console.log('this is action ', action)
-      return { ...state, rockets: action.json, loading: false }
+      return { ...state, rockets: action.payload, loading: false }
     default:
-      return state;
+      return state
   }
-};
-export default rockets;
+}
+export default rockets

@@ -1,13 +1,11 @@
 const history = (state = {}, action) => {
   switch (action.type) {
     case 'GET_HISTORY':
-      console.log('this is action ', action)
-      return { ...state, loading: true };
+      return { ...state, loading: true }
     case 'HISTORY_RECEIVED':
-      console.log('this is action ', action)
-      return { ...state, history: action.json, loading: false }
+      return { ...state, history: action.payload, loading: false }
     default:
-      return state;
+      return state
   }
-};
-export default history;
+}
+export default history
