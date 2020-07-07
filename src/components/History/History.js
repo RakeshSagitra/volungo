@@ -1,18 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Moment from 'react-moment';
+import React, { useEffect } from 'react'
+import Moment from 'react-moment'
 import './History.module.css'
-import WikiIcon from '../../assets/images/wiki.jpeg';
-import RedditIcon from '../../assets/images/reddit.png';
-import ArticleIcon from '../../assets/images/article.png';
-import { connect, useDispatch } from 'react-redux';
-import Loading from './loading.js';
-import { getHistory } from '../../actions/history-actions';
+import WikiIcon from '../../assets/images/wiki.jpeg'
+import RedditIcon from '../../assets/images/reddit.png'
+import ArticleIcon from '../../assets/images/article.png'
+import { useDispatch, useSelector } from 'react-redux'
+import { getHistory } from '../../actions/history-actions'
+import Loader from '../Loader'
 
-const History = (props) => {
+const History = () => {
+  const { history, isLoading } = useSelector(({ history }) => ({
+    history: history.history,
+    isLoading: history.loading,
+  }))
+
+  const dispatch = useDispatch()
+
   useEffect(() => {
-  props.history()
-  }, []);
+    dispatch(getHistory())
+  }, [])
   return (
     <div>
       <table id="simple-board">
@@ -26,7 +32,7 @@ const History = (props) => {
         </thead>
         <tbody>
           {
-            props.data && (props.data.map(({ title, details, event_date_utc, links }, index) => (
+            history && (history.map(({ title, details, event_date_utc, links }, index) => (
               <tr key={index} >
                 <td >
                   {title}
@@ -57,15 +63,9 @@ const History = (props) => {
           }
         </tbody>
       </table>
-      <Loading />
+      {isLoading && <Loader />}
     </div>
-  );
+  )
 }
 
-const mapStateToProps = (state) => {
-  return { data: state.history.history }
-}
-const mapDispatchToProps = (dispatch) => ({
-  history: () => dispatch(getHistory()),
-})
-export default connect(mapStateToProps, mapDispatchToProps)(History);
+export default History

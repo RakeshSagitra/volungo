@@ -1,23 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Moment from 'react-moment';
-import Select from 'react-select';
+import React, { useEffect, useState } from 'react'
+import Moment from 'react-moment'
 import './Launches.module.css'
-import WikiIcon from '../../assets/images/wiki.jpeg';
-import RedditIcon from '../../assets/images/reddit.png';
-import ArticleIcon from '../../assets/images/article.png';
-import YoutubeIcon from '../../assets/images/youtube.png';
-import Loading from '../Launches/loading';
-import { connect } from 'react-redux';
-import { getLaunches } from '../../actions/launches-actions';
-import { getRockets } from '../../actions/rockets-actions';
+import WikiIcon from '../../assets/images/wiki.jpeg'
+import RedditIcon from '../../assets/images/reddit.png'
+import ArticleIcon from '../../assets/images/article.png'
+import YoutubeIcon from '../../assets/images/youtube.png'
+import Loader from '../Loader'
+import { useDispatch, useSelector } from 'react-redux'
+import { getLaunches } from '../../actions/launches-actions'
+import { getRockets } from '../../actions/rockets-actions'
 
-const Launches = (props) => {
-  const [search, setSearch] = useState('');
-  const [searchDate, setSearchDate] = useState('');
-  const [selectOrbit, setSelectOrbit] = useState('');
-  const [orbitMap, setOrbitMap] = useState(new Map());
-  const [launches, setLaunches] = useState([]);
+const Launches = () => {
+  const { allLaunches, rocketsData, isLoading } = useSelector(({ launches, rockets }) => ({
+    allLaunches: launches.launches,
+    rocketsData: rockets.rockets,
+    isLoading: launches.loading,
+  }))
+  const dispatch = useDispatch()
+
+  const [launches, setLaunches] = useState([])
+  const [orbitMap, setOrbitMap] = useState(new Map())
+
+  const [search, setSearch] = useState('')
+  const [searchDate, setSearchDate] = useState('')
+  const [selectOrbit, setSelectOrbit] = useState('')
   const orbits = [
     {
       "id": '',
@@ -42,29 +48,18 @@ const Launches = (props) => {
       "name": "Pluto Orbit"
     }
   ]
-  // Replace your useEffect with these. Please handle errors as well.
-  useEffect(() => {
-    async function fetchData() {
-      await props.launches()
-      setLaunches(props.data);
-      console.log('this is props data ', props.data)
-      await props.rockets()
-      setOrbitMap(createRocketOrbitMap(props.rocketsData));
-    }
-    fetchData()
-  }, []);
 
-  useEffect(() => {
-    const filteredData = launches.filter(({ mission_name, launch_date_local, rocket }) => {
-      let match = true;
+  const filterData = () => {
+    if (!allLaunches || !allLaunches.length) return []
+
+    return allLaunches.filter(({ mission_name, launch_date_local, rocket }) => {
       if (search && !mission_name.toLowerCase().includes(search.toLowerCase())) {
-        return false;
+        return false
       }
       if (searchDate && !launch_date_local.includes(searchDate)) {
-        return false;
+        return false
       }
       if (selectOrbit) {
-        let returnResults = []
         let orbitMapValues = orbitMap.get(rocket.rocket_id)
         let selectedOrbitValue = orbitMapValues.get(selectOrbit)
         if (selectedOrbitValue) {
@@ -76,11 +71,30 @@ const Launches = (props) => {
         }
       }
 
-      return true;
-    });
-    console.log(filteredData)
-    // props.data = (filteredData);
-  }, [search, searchDate, selectOrbit]);
+      return true
+    })
+  }
+
+  useEffect(() => {
+    dispatch(getLaunches())
+    dispatch(getRockets())
+  }, [])
+
+  useEffect(() => {
+    if (allLaunches) {
+      setLaunches(allLaunches)
+    }
+
+    if (rocketsData) {
+      setOrbitMap(createRocketOrbitMap(rocketsData))
+    }
+  }, [allLaunches, rocketsData])
+
+  useEffect(() => {
+    const filteredData = filterData()
+
+    setLaunches(filterData)
+  }, [search, searchDate, selectOrbit])
 
   function searchData(value) {
     setSearch(value)
@@ -91,7 +105,6 @@ const Launches = (props) => {
   }
 
   function createRocketOrbitMap(rockets) {
-    console.log('this is the rockets ', rockets)
     let returnResults = new Map()
     rockets.map(result => {
       let weights = new Map()
@@ -100,12 +113,10 @@ const Launches = (props) => {
       })
       returnResults.set(result.rocket_id, weights)
     })
-    console.log(returnResults)
     return returnResults
   }
 
   function setSelectOrbitValue(value) {
-    console.log(value)
     setSelectOrbit(value)
   }
 
@@ -150,7 +161,7 @@ const Launches = (props) => {
           </tr>
         </thead>
         <tbody>
-          {props.data && (props.data.map(({ mission_name, details, launch_date_local, links, rocket }, index) => (
+          {launches && (launches.map(({ mission_name, details, launch_date_local, links, rocket }, index) => (
             < tr key={index} id="row0" >
               <td className="missionName" id="cell0-0">
                 {mission_name}
@@ -195,17 +206,9 @@ const Launches = (props) => {
           }
         </tbody>
       </table>
-      <Loading />
+      {isLoading && <Loader />}
     </div>
-  );
+  )
 }
 
-const mapStateToProps = (state) => {
-  console.log('this is the state in mapStateToProps ', state)
-  return { data: state.launches.launches, launches: state.launches.launches, rocketsData: state.rockets.rockets }
-}
-const mapDispatchToProps = (dispatch) => ({
-  launches: () => dispatch(getLaunches()),
-  rockets: () => dispatch(getRockets()),
-})
-export default connect(mapStateToProps, mapDispatchToProps)(Launches);
+export default Launches

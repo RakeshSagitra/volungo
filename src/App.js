@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from 'react'
+import './App.css'
 
 import History from './components/History/History'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import Launches from './components/Launches/Launches';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import Launches from './components/Launches/Launches'
 
 function App(props) {
-  const [active, setActive] = useState([]);
+  const [active, setActive] = useState([])
   function toggleActive(value) {
     setActive(value)
   }
-  // return (
-  //   <div className="App">
-  //     {/* <History></History> */}
-  //     <Launches></Launches>
-  //   </div>
-  // );
+
   return (
     <Router>
       <div>
@@ -31,18 +26,10 @@ function App(props) {
             }}>Launches</Link>
           </li>
         </ul>
-
-        {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
         <Switch>
           <Route exact path="/">
             <div>
-              Please select a route
+              <h3>Please select a route</h3>
             </div>
           </Route>
           <Route path="/history">
@@ -54,7 +41,7 @@ function App(props) {
         </Switch>
       </div>
     </Router>
-  );
+  )
 }
 
-export default App;
+export default App
