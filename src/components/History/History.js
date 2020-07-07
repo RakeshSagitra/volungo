@@ -5,61 +5,67 @@ import './History.module.css'
 import WikiIcon from '../../assets/images/wiki.jpeg';
 import RedditIcon from '../../assets/images/reddit.png';
 import ArticleIcon from '../../assets/images/article.png';
+import { connect, useDispatch } from 'react-redux';
+import Loading from './loading.js';
+import { getHistory } from '../../actions/history-actions';
 
-function History() {
-  const [data, setData] = useState([]);
+const History = (props) => {
   useEffect(() => {
-    async function fetchData() {
-      const result = await axios(
-        'https://api.spacexdata.com/v3/history');
-      console.log(result.data);
-      setData(result.data);
-      console.log('this is the data', data);
-    }
-    fetchData();
+  props.history()
   }, []);
   return (
-    <table id="simple-board">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Details</th>
-          <th>Event Date</th>
-          <th className="actions">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map(({ title, details, event_date_utc, links }, index) => (
-          <tr key={index} >
-            <td >
-              {title}
-            </td>
-            <td className="history-details">
-              {details}
-            </td>
-            <td >
-              <Moment format="DD / MM / YYYY HH:mm">
-                {event_date_utc}
-              </Moment>
-            </td>
-            <td>
-              <div className="links">
-                <a href={links.wikipedia} target={"_blank"}>
-                  <img className="image" src={WikiIcon} />
-                </a>
-                <a href={links.reddit} target={"_blank"}>
-                  <img className="image" src={RedditIcon} />
-                </a>
-                <a href={links.article} target={"_blank"}>
-                  <img className="image" src={ArticleIcon} />
-                </a>
-              </div>
-            </td>
+    <div>
+      <table id="simple-board">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Details</th>
+            <th>Event Date</th>
+            <th className="actions">Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {
+            props.data && (props.data.map(({ title, details, event_date_utc, links }, index) => (
+              <tr key={index} >
+                <td >
+                  {title}
+                </td>
+                <td className="history-details">
+                  {details}
+                </td>
+                <td >
+                  <Moment format="DD / MM / YYYY HH:mm">
+                    {event_date_utc}
+                  </Moment>
+                </td>
+                <td>
+                  <div className="links">
+                    <a href={links.wikipedia} target={"_blank"}>
+                      <img className="image" src={WikiIcon} />
+                    </a>
+                    <a href={links.reddit} target={"_blank"}>
+                      <img className="image" src={RedditIcon} />
+                    </a>
+                    <a href={links.article} target={"_blank"}>
+                      <img className="image" src={ArticleIcon} />
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            )))
+          }
+        </tbody>
+      </table>
+      <Loading />
+    </div>
   );
 }
 
-export default History;
+const mapStateToProps = (state) => {
+  return { data: state.history.history }
+}
+const mapDispatchToProps = (dispatch) => ({
+  history: () => dispatch(getHistory()),
+})
+export default connect(mapStateToProps, mapDispatchToProps)(History);
