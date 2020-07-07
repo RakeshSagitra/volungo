@@ -71,6 +71,8 @@ function Launches() {
           if(selectedOrbitValue.lb < rocket.second_stage.payloads[0].payload_mass_lbs) {
             return false
           }
+        } else {
+          return false
         }
       }
 
