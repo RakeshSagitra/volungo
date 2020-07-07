@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 
 import History from './components/History/History'
-import {BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Launches from './components/Launches/Launches';
 
 function App(props) {
@@ -24,8 +24,6 @@ function App(props) {
             <Link to="/launches">Launches</Link>
           </li>
         </ul>
-
-        <hr />
 
         {/*
           A <Switch> looks through all its children <Route>

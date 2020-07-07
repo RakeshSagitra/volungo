@@ -1,5 +1,24 @@
 .History {
 }
+#simple-board {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#simple-board td,
+#simple-board th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#simple-board th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4caf50;
+  color: white;
+}
 
 .image {
   width: 40px;

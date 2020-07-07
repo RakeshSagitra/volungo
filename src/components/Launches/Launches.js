@@ -141,11 +141,11 @@ function Launches() {
       <table id="simple-board">
         <thead>
           <tr>
-            <td>Title</td>
-            <td>Details</td>
-            <td>Payload Details</td>
-            <td>Event Date</td>
-            <td className="actions">Actions</td>
+            <th>Title</th>
+            <th>Details</th>
+            <th>Payload Details</th>
+            <th>Event Date</th>
+            <th className="actions">Actions</th>
           </tr>
         </thead>
         <tbody>
