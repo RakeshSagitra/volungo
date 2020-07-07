@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "start": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode production"
   },
   "babel": {
@@ -26,12 +26,15 @@
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-logger": "^1.1.0",
     "react-moment": "^0.9.7",
+    "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-router-redux": "^4.0.8",
     "react-saga": "^0.3.1",
     "react-select": "^3.1.0",
     "redux-actions": "^2.6.5",
+    "redux-logger": "^3.0.6",
     "redux-saga": "^1.1.3"
   },
   "devDependencies": {
