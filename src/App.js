@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import History from './components/History/History'
@@ -6,7 +6,10 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Launches from './components/Launches/Launches';
 
 function App(props) {
-
+  const [active, setActive] = useState([]);
+  function toggleActive(value) {
+    setActive(value)
+  }
   // return (
   //   <div className="App">
   //     {/* <History></History> */}
@@ -18,10 +21,14 @@ function App(props) {
       <div>
         <ul>
           <li>
-            <Link to="/history">History</Link>
+            <Link to="/history" className={active === 'history' ? 'active' : null} onClick={(event) => {
+              toggleActive('history')
+            }}>History</Link>
           </li>
           <li>
-            <Link to="/launches">Launches</Link>
+            <Link to="/launches" className={active === 'launches' ? 'active' : null} onClick={(event) => {
+              toggleActive('launches')
+            }}>Launches</Link>
           </li>
         </ul>
 
