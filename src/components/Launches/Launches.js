@@ -9,6 +9,7 @@ import Loader from '../Loader'
 import { useDispatch, useSelector } from 'react-redux'
 import { getLaunches } from '../../actions/launches-actions'
 import { getRockets } from '../../actions/rockets-actions'
+import Modal from '../Modal'
 
 const Launches = () => {
   const { allLaunches, rocketsData, isLoading } = useSelector(({ launches, rockets }) => ({
@@ -19,6 +20,9 @@ const Launches = () => {
   const dispatch = useDispatch()
 
   const [launches, setLaunches] = useState([])
+  const [show, setShow] = useState(false)
+  const [link, setLink] = useState({})
+  const [launchData, setLaunchData] = useState({})
   const [orbitMap, setOrbitMap] = useState(new Map())
 
   const [search, setSearch] = useState('')
@@ -104,6 +108,25 @@ const Launches = () => {
     setSearchDate(value)
   }
 
+  function showModal(links, launchData) {
+    setShow(!show)
+    setLaunchData(launchData)
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+    const match = links.video_link.match(regExp)
+    setLink((match && match[2].length === 11)
+      ? 'https://www.youtube.com/embed/' + match[2]
+      : null)
+  }
+
+  function closeModal() {
+    setShow(false)
+  }
+
+  function shareData() {
+    //call your imaginary endpoint dispatch function here to share the launch data on share button click
+    alert('Mission: ' + launchData.mission_name + '\n \n Mission Details: ' + launchData.details + '\n \n Link: ' + launchData.links.article_link)
+  }
+
   function createRocketOrbitMap(rockets) {
     let returnResults = new Map()
     rockets.map(result => {
@@ -163,13 +186,19 @@ const Launches = () => {
         <tbody>
           {launches && (launches.map(({ mission_name, details, launch_date_local, links, rocket }, index) => (
             < tr key={index} id="row0" >
-              <td className="missionName" id="cell0-0">
+              <td className="missionName" id="cell0-0" onClick={e => {
+                showModal(links, { mission_name, details, launch_date_local, links, rocket })
+              }}>
                 {mission_name}
               </td>
-              <td id="cell0-1" className="details">
+              <td id="cell0-1" className="details" onClick={e => {
+                showModal(links, { mission_name, details, launch_date_local, links, rocket })
+              }}>
                 {details}
               </td>
-              <td id="cell0-1" className="payload">
+              <td id="cell0-1" className="payload" onClick={e => {
+                showModal(links, { mission_name, details, launch_date_local, links, rocket })
+              }}>
                 <p><b>Nationality:</b> {rocket.second_stage.payloads[0].nationality}</p>
                 <p><b>Manufacturer:</b> {rocket.second_stage.payloads[0].manufacturer}</p>
                 <p><b>Payload Type:</b> {rocket.second_stage.payloads[0].payload_type}</p>
@@ -206,6 +235,7 @@ const Launches = () => {
           }
         </tbody>
       </table>
+      <Modal className="Modal" launchData={launchData} link={link} show={show} onClose={closeModal} onShare={shareData}>Message in Modal</Modal>
       {isLoading && <Loader />}
     </div>
   )
